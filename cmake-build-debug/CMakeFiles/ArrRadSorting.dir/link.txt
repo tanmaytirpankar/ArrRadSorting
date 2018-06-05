@@ -1,0 +1,1 @@
+/usr/bin/c++   -fopenmp -g    CMakeFiles/ArrRadSorting.dir/main.cpp.o  -o ArrRadSorting 
