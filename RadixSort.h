@@ -44,13 +44,11 @@ public:
         }
         in.close();*/
         arr=vector<Points<T>>(n);
-        srand(2);
         omp_set_num_threads(num_threads);
 #pragma omp parallel for
         for (int i = 0; i < n; i++) {
-            arr[i]=Points<T>(rand(),rand(),rand());
+            arr[i]=Points<T>(rand()%10,rand()%10,rand()%10);
         }
-        //print();
         cout<<endl;
         /*cout<<"Enter Points";
         arr=new Points<T>[n];
@@ -71,24 +69,18 @@ public:
     void Sort(int first,int last, int level)
     {
         int num_elements=last-first+1;
-        vector<vector<int>> count(num_threads);
-        for (int l = 0; l < num_threads; ++l) {
-            count[l] = vector<int>(8);
-        }
         if(num_elements<=1 || level<1)
         {
             return ;
         }
-        int count1[8], position[8], position1[8];
+        int count[8],position[8],position1[8];
         vector<Points<T>> temp(num_elements);
         omp_set_num_threads(num_threads);
 #pragma omp parallel for
         for (int j = 0; j < 8; j++) {
-            count1[j]=position[j]=0;
-            count[omp_get_thread_num()][j]=0;
+            count[j]=position[j]=0;
         }
         omp_set_num_threads(num_threads);
-//        cout<<"first: "<<first<<" last: "<<last<<" sizeof(count): "<<count.size()<<" sizeof(count[0])"<<count[0].size()<<endl;
 #pragma omp parallel for
         for (int i = first; i <= last; i++)
         {
@@ -104,34 +96,12 @@ public:
             z=z&1;
             y=y<<1;
             x=x<<2;
-            count[omp_get_thread_num()][x+y+z]++;
-        }
-        omp_set_num_threads(num_threads);
-//        cout<<"Values in count:"<<endl;
-//        for(int i = 0; i < num_threads; i++){
-//            for(int j = 0; j < 8; j++){
-//                cout<<count[i][j]<<" ";
-//            }
-//            cout<<endl;
-//        }
-#pragma omp parallel
-        for (int m = 0; m < 8; ++m) {
-            int tid = omp_get_thread_num();
             #pragma omp critical
-            {
-                count1[m] = count1[m] + count[tid][m];
-//                cout<<"TID "<<tid<<": count1["<<m<<"]"<<count1[m]<<""<<endl;
-            }
+            count[x+y+z]++;
         }
-
-//        cout<<"Counts in count at depth "<<level<<" is:"<<endl;
-//        for(int i = 0; i < 8; i++)
-//            cout<<count1[i]<<" ";
-//        cout<<endl;
-
         position[0]=position1[0]=first;
         for (int k = 1; k < 8; k++) {
-            position[k]=position[k-1]+count1[k-1];
+            position[k]=position[k-1]+count[k-1];
             position1[k]=position[k];
         }
         for (int i = 0; i < num_elements; i++) {
@@ -169,7 +139,7 @@ public:
         int lvls=sizeof(arr[0].getX())*8;
         vector<Points<T>> arr1(n);
         Sort(0,n-1,lvls);
-        //print();
+        print();
     }
     /*void sorting()
     {
