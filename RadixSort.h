@@ -52,7 +52,7 @@ public:
         for (int i = 0; i < n; i++) {
             arr[i]=rand()%100;
         }
-        print();
+        //print();
         cout<<endl;
         /*cout<<"Enter Points";
         arr=new Points<T>[n];
@@ -228,10 +228,11 @@ public:
         chrono::high_resolution_clock::time_point t2 = chrono::high_resolution_clock::now();
         auto duration = chrono::duration_cast<chrono::microseconds>( t2 - t1 ).count();
 
-        cout <<endl <<"The time taken for initialization is "<<duration <<" microseconds"<<endl;
+        //cout <<endl <<"The time taken for initialization is "<<duration <<" microseconds"<<endl;
 
         t1 = chrono::high_resolution_clock::now();
-        int remainder= sizeof(arr[0])%word_size;
+        int remainder= (sizeof(arr[0])*8)%word_size;
+        int shift;
         omp_set_num_threads(num_threads);
 //        cout<<"first: "<<first<<" last: "<<last<<" sizeof(count): "<<count.size()<<" sizeof(count[0])"<<count[0].size()<<endl;
 #pragma omp parallel for
@@ -239,24 +240,27 @@ public:
         {
             temp[i-first]=arr[i];
             T x=arr[i];
-            x=x>>((level-1)*word_size);
-            if(remainder!=0)
-                x=x>>remainder-1;
+            shift=((level-1)*word_size)-(word_size-remainder);
+            if(level>1)
+                x=x>>shift;
+//            x=x>>((level-1)*word_size);
+//            if(remainder!=0)
+//                x=x>>remainder-1;
             x=x&int(pow(2,word_size)-1);
             count[omp_get_thread_num()][x]++;
         }
+        //cout<<endl<<"Shift is "<<shift<<endl;
         t2 = chrono::high_resolution_clock::now();
         duration = chrono::duration_cast<chrono::microseconds>( t2 - t1 ).count();
 
-        cout <<endl <<"The time taken for calculating counts is "<<duration <<" microseconds"<<endl;
-        t1 = chrono::high_resolution_clock::now();
-        cout<<"Values in count:"<<endl;
-        for(int i = 0; i < num_threads; i++){
-            for(int j = 0; j < int(pow(2,word_size)); j++){
-                cout<<count[i][j]<<" ";
-            }
-            cout<<endl;
-        }
+        //cout <<endl <<"The time taken for calculating counts is "<<duration <<" microseconds"<<endl;
+//        cout<<"Values in count:"<<endl;
+//        for(int i = 0; i < num_threads; i++){
+//            for(int j = 0; j < int(pow(2,word_size)); j++){
+//                cout<<count[i][j]<<" ";
+//            }
+//            cout<<endl;
+//        }
         t1 = chrono::high_resolution_clock::now();
 //        position1[0]=position[0][0]=first;
 //        int prev_buc=0;
@@ -284,22 +288,25 @@ public:
                 position1[buc+1]=position[0][buc+1]=position[num_threads-1][buc]+count[num_threads-1][buc];
         }
 
-        cout<<"Positions in position at depth "<<level<<" is:"<<endl;
-        for(int i = 0; i < num_threads; i++){
-            for(int j = 0; j < int(pow(2,word_size)); j++){
-                cout<<position[i][j]<<" ";
-            }
-            cout<<endl;
-        }
+//        cout<<"Positions in position at depth "<<level<<" is:"<<endl;
+//        for(int i = 0; i < num_threads; i++){
+//            for(int j = 0; j < int(pow(2,word_size)); j++){
+//                cout<<position[i][j]<<" ";
+//            }
+//            cout<<endl;
+//        }
 
 
         omp_set_num_threads(num_threads);
 #pragma omp parallel for
         for (int i = 0; i < num_elements; i++) {
             T x = temp[i];
-            x=x>>((level-1)*word_size);
-            if(remainder!=0)
-                x=x>>remainder-1;
+            shift=((level-1)*word_size)-(word_size-remainder);
+            if(level>1)
+                x=x>>shift;
+//            x=x>>((level-1)*word_size);
+//            if(remainder!=0)
+//                x=x>>remainder-1;
             x=x&int(pow(2,word_size)-1);
             arr[position[omp_get_thread_num()][x]]=temp[i];
             position[omp_get_thread_num()][x]++;
@@ -309,16 +316,16 @@ public:
         t2 = chrono::high_resolution_clock::now();
         duration = chrono::duration_cast<chrono::microseconds>( t2 - t1 ).count();
 
-        cout <<endl <<"The time taken for final sorting is "<<duration <<" microseconds"<<endl;
+        //cout <<endl <<"The time taken for final sorting is "<<duration <<" microseconds"<<endl;
 
         //cout<<"Recursion number "<<level<<endl;
-
+        //print();
         omp_set_num_threads(num_threads);
 #pragma omp parallel for
         for (int i = 0; i < int(pow(2,word_size)); i++)  {
             int begin=position1[i];
             int ending;
-            if(i!=int(pow(2,word_size)))
+            if(i!=int(pow(2,word_size))-1)
                 ending=position1[i+1]-1;
             else
                 ending=last;
@@ -332,10 +339,10 @@ public:
             lvls=(sizeof(arr[0])*8)/word_size;
         else
             lvls=(sizeof(arr[0])*8)/word_size+1;
-        cout<<lvls;
+        //cout<<lvls;
         //vector<Points<T>> arr1(n);
         Sort(0,n-1,lvls);
-        print();
+        //print();
     }
     /*void sorting()
     {
