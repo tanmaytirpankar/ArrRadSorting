@@ -7,12 +7,14 @@
 #include <chrono>
 using namespace std;
 int main() {
-    int n,num;
+    int n,num,buck;
     cout<<"Enter the number of points:";
     cin>>n;
     cout<<"Number of points "<<n<<endl;
     cout<<"Enter the number of threads:";
     cin>>num;
+    cout<<"Enter the size of bucketing number";
+    cin>>buck;
     /*ofstream fs;
     string filename = "exampleOutput5.csv";
     fs.open(filename);
@@ -22,7 +24,7 @@ int main() {
         fs << (rand()%(2^31)) << "," << (rand()%(2^31)) << "," << (rand()%(2^31)) << endl;
     }
     fs.close();*/
-    RadixSort<int> *obj=new RadixSort<int>(n,num);
+    RadixSort<int> *obj=new RadixSort<int>(n,num,buck);
     //obj->printinp();
     //clock_t t1,t2;
     //t1=clock();
