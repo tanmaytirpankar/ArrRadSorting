@@ -34,6 +34,7 @@ int main() {
     auto duration = chrono::duration_cast<chrono::microseconds>( t2 - t1 ).count();
 
     cout <<endl <<"The time taken is "<<duration <<" microseconds"<<endl;
+    obj->check();
     //t2=clock();
     //float diff ((float)t2-(float)t1);
     //cout<<diff<<endl;

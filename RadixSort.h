@@ -17,6 +17,7 @@
 #include <string>
 #include <chrono>
 #include <math.h>
+#include <bitset>
 using namespace std;
 template <class T>
 class RadixSort{
@@ -50,10 +51,12 @@ public:
         omp_set_num_threads(num_threads);
 #pragma omp parallel for
         for (int i = 0; i < n; i++) {
-            arr[i]=rand()%100;
+            arr[i]=rand();
         }
-        //print();
-        cout<<endl;
+//        print();
+//        cout<<endl;
+//        print1();
+//        cout<<endl;
         /*cout<<"Enter Points";
         arr=new Points<T>[n];
         for (int i = 0; i < n; i++) {
@@ -68,6 +71,18 @@ public:
         for (int i = 0; i < this->n; i++)
         {
             cout<<arr[i]<<",";
+        }
+    }
+    void print1() {
+        for (int j = 0; j <this->n; ++j) {
+            int x=arr[j];
+           for (int i = 0; i < 32; i++) {
+               int temp=x;
+               temp=temp>>31-i;
+               temp=temp&1;
+               cout << temp;
+            }
+            cout<<endl;
         }
     }
     /*void Sort(int first,int last, int level)
@@ -335,14 +350,11 @@ public:
     void sorting()
     {
         int lvls=0;
-        if((sizeof(arr[0])*8)%word_size==0)
-            lvls=(sizeof(arr[0])*8)/word_size;
-        else
-            lvls=(sizeof(arr[0])*8)/word_size+1;
+        lvls=(sizeof(arr[0])*8)/word_size+1;
         //cout<<lvls;
         //vector<Points<T>> arr1(n);
         Sort(0,n-1,lvls);
-        //print();
+        print();
     }
     /*void sorting()
     {
@@ -360,6 +372,20 @@ public:
             cout<<"("<<arr[i].getX()<<","<<arr[i].getY()<<","<<arr[i].getZ()<<"),";
         }
     }*/
+    void check()
+    {
+        for (int i = 0; i < arr.size()-1; i++) {
+            if (arr[i] > arr[i + 1]) {
+                cout << "Sorted wrongly";
+                return;
+            }
+            else {
+                cout << "Sorted correcty";
+                return;
+            }
+
+        }
+    }
 };
 
 #endif //UNTITLED_RADIXSORT_H
