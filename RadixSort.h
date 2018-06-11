@@ -21,7 +21,7 @@
 using namespace std;
 template <class T>
 class RadixSort{
-    vector <T> arr;
+    vector <T> arr,arr1;
     int num_threads;
     int n;
     int word_size;
@@ -47,11 +47,12 @@ public:
         }
         in.close();*/
         arr=vector<T>(n);
+        arr1=vector<T>(n);
         srand(2);
         omp_set_num_threads(num_threads);
 #pragma omp parallel for
         for (int i = 0; i < n; i++) {
-            arr[i]=rand();
+            arr[i]=arr1[i]=rand();
         }
 //        print();
 //        cout<<endl;
@@ -231,7 +232,7 @@ public:
             return ;
         }
         int position1[int(pow(2,word_size))];
-        vector<T> temp(num_elements);
+        //vector<T> temp(num_elements);
         chrono::high_resolution_clock::time_point t1 = chrono::high_resolution_clock::now();
         omp_set_num_threads(num_threads);
 #pragma omp parallel for
@@ -253,8 +254,12 @@ public:
 #pragma omp parallel for
         for (int i = first; i <= last; i++)
         {
-            temp[i-first]=arr[i];
-            T x=arr[i];
+            T x;
+            //temp[i-first]=arr[i];
+            if(level%2==1)
+                x=arr1[i];
+            else
+                x=arr[i];
             shift=((level-1)*word_size)-(word_size-remainder);
             if(level>1)
                 x=x>>shift;
@@ -314,8 +319,12 @@ public:
 
         omp_set_num_threads(num_threads);
 #pragma omp parallel for
-        for (int i = 0; i < num_elements; i++) {
-            T x = temp[i];
+        for (int i = first; i <= last; i++) {
+            T x;
+            if(level%2==1)
+                x = arr1[i];
+            else
+                x = arr[i];
             shift=((level-1)*word_size)-(word_size-remainder);
             if(level>1)
                 x=x>>shift;
@@ -323,11 +332,14 @@ public:
 //            if(remainder!=0)
 //                x=x>>remainder-1;
             x=x&int(pow(2,word_size)-1);
-            arr[position[omp_get_thread_num()][x]]=temp[i];
+            if(level%2==1)
+                arr[position[omp_get_thread_num()][x]]=arr1[i];
+            else
+                arr1[position[omp_get_thread_num()][x]]=arr[i];
             position[omp_get_thread_num()][x]++;
         }
-        temp.clear();
-        temp.shrink_to_fit();
+//        temp.clear();
+//        temp.shrink_to_fit();
         t2 = chrono::high_resolution_clock::now();
         duration = chrono::duration_cast<chrono::microseconds>( t2 - t1 ).count();
 
@@ -353,8 +365,8 @@ public:
         lvls=(sizeof(arr[0])*8)/word_size+1;
         //cout<<lvls;
         //vector<Points<T>> arr1(n);
-        Sort(0,n-1,lvls);
-        print();
+        this->Sort(0,n-1,lvls);
+        //print();
     }
     /*void sorting()
     {
@@ -372,16 +384,45 @@ public:
             cout<<"("<<arr[i].getX()<<","<<arr[i].getY()<<","<<arr[i].getZ()<<"),";
         }
     }*/
-    void check()
+    void transfer()
+    {
+        if(check())
+        {
+            cout<<"Sorted list is in arr.";
+        } else if(check1())
+        {
+            cout<<"Sorted list is in arr1.";
+            omp_set_num_threads(num_threads);
+            #pragma omp parallel for
+            for (int i = 0; i < arr1.size(); i++) {
+                arr[i]=arr1[i];
+            }
+        }
+    }
+    bool check()
     {
         for (int i = 0; i < arr.size()-1; i++) {
             if (arr[i] > arr[i + 1]) {
-                cout << "Sorted wrongly";
-                return;
+                //cout << "arr Sorted wrongly";
+                return false;
             }
             else {
-                cout << "Sorted correcty";
-                return;
+                //cout << "arr Sorted correcty";
+                return true;
+            }
+
+        }
+    }
+    bool check1()
+    {
+        for (int i = 0; i < arr1.size()-1; i++) {
+            if (arr1[i] > arr1[i + 1]) {
+                //cout << "arr1 Sorted wrongly";
+                return false;
+            }
+            else {
+                //cout << "arr1 Sorted correcty";
+                return true;
             }
 
         }
