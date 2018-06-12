@@ -29,19 +29,23 @@ math.h
 -
 bitset
 -
+bits/stdc++.h
+-
+algorithm
+-
 
 /home/tanmay/CLionProjects/ArrRadSorting/main.cpp
 iostream
 -
 RadixSort.h
 /home/tanmay/CLionProjects/ArrRadSorting/RadixSort.h
-time.h
--
 fstream
 -
 string
 -
-math.h
+ctime
+-
+cmath
 -
 chrono
 -

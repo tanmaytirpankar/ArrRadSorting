@@ -1,9 +1,9 @@
 #include <iostream>
 #include "RadixSort.h"
-#include <time.h>
 #include <fstream>
 #include <string>
-#include <math.h>
+#include <ctime>
+#include <cmath>
 #include <chrono>
 using namespace std;
 int main() {
@@ -32,9 +32,15 @@ int main() {
     obj->sorting();
     chrono::high_resolution_clock::time_point t2 = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::microseconds>( t2 - t1 ).count();
-
     cout <<endl <<"The time taken is "<<duration <<" microseconds"<<endl;
     obj->transfer();
+
+//    chrono::high_resolution_clock::time_point t1 = chrono::high_resolution_clock::now();
+//    obj->insertionSort(0,n-1,9);
+//    chrono::high_resolution_clock::time_point t2 = chrono::high_resolution_clock::now();
+//    auto duration = chrono::duration_cast<chrono::microseconds>( t2 - t1 ).count();
+//    cout <<endl <<"The time taken is "<<duration <<" microseconds"<<endl;
+//    obj->print();
     //t2=clock();
     //float diff ((float)t2-(float)t1);
     //cout<<diff<<endl;

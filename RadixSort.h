@@ -18,6 +18,8 @@
 #include <chrono>
 #include <math.h>
 #include <bitset>
+#include <bits/stdc++.h>
+#include <algorithm>
 using namespace std;
 template <class T>
 class RadixSort{
@@ -52,7 +54,7 @@ public:
         omp_set_num_threads(num_threads);
 #pragma omp parallel for
         for (int i = 0; i < n; i++) {
-            arr[i]=arr1[i]=rand();
+            arr1[i]=arr[i]=rand();
         }
 //        print();
 //        cout<<endl;
@@ -84,6 +86,30 @@ public:
                cout << temp;
             }
             cout<<endl;
+        }
+    }
+    void insertionSort(int first,int last,int level)
+    {
+        int i,j;
+        if(level%2==0) {
+            for (i = first + 1; i <= last; i++) {
+                int selected_elem = arr[i];
+                for (j = first; j < i && arr[j] < arr[i]; j++);
+                for (int k = i; k > j; k--) {
+                    arr[k] = arr[k - 1];
+                }
+                arr[j] = selected_elem;
+            }
+        } else if (level%2==1)
+        {
+            for (i = first + 1; i <= last; i++) {
+                int selected_elem = arr1[i];
+                for (j = first; j < i && arr1[j] < arr1[i]; j++);
+                for (int k = i; k > j; k--) {
+                    arr1[k] = arr1[k - 1];
+                }
+                arr1[j] = selected_elem;
+            }
         }
     }
     /*void Sort(int first,int last, int level)
@@ -227,7 +253,16 @@ public:
             count[l] = vector<int>(pow(2,word_size));
             position[l]=vector<int>(pow(2,word_size));
         }
-        if(num_elements<=1 || level<1)
+//        if(num_elements<=1 || level<1)
+//        {
+//            return ;
+//        }
+        if(num_elements<=4000)
+        {
+            insertionSort(first,last,level-1);
+            return ;
+        }
+        if(level<1)
         {
             return ;
         }
