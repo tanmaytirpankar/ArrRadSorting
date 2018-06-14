@@ -257,9 +257,10 @@ public:
 //        {
 //            return ;
 //        }
-        if(num_elements<=4000)
+        if(num_elements<=4096)
         {
-            insertionSort(first,last,level-1);
+            //insertionSort(first,last,level-1);
+            std::sort(&arr[first],&arr[last+1]);
             return ;
         }
         if(level<1)
