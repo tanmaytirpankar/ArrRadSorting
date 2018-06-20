@@ -284,7 +284,8 @@ public:
 
         t1 = chrono::high_resolution_clock::now();
         int remainder= (sizeof(arr[0])*8)%word_size;
-        int shift;
+        int shift=((level-1)*word_size)-(word_size-remainder);
+        int mask=int(pow(2,word_size)-1);
         omp_set_num_threads(num_threads);
 //        cout<<"first: "<<first<<" last: "<<last<<" sizeof(count): "<<count.size()<<" sizeof(count[0])"<<count[0].size()<<endl;
 #pragma omp parallel for
@@ -296,13 +297,12 @@ public:
                 x=arr1[i];
             else
                 x=arr[i];
-            shift=((level-1)*word_size)-(word_size-remainder);
             if(level>1)
                 x=x>>shift;
 //            x=x>>((level-1)*word_size);
 //            if(remainder!=0)
 //                x=x>>remainder-1;
-            x=x&int(pow(2,word_size)-1);
+            x=x&mask;
             count[omp_get_thread_num()][x]++;
         }
         //cout<<endl<<"Shift is "<<shift<<endl;
@@ -361,13 +361,12 @@ public:
                 x = arr1[i];
             else
                 x = arr[i];
-            shift=((level-1)*word_size)-(word_size-remainder);
             if(level>1)
                 x=x>>shift;
 //            x=x>>((level-1)*word_size);
 //            if(remainder!=0)
 //                x=x>>remainder-1;
-            x=x&int(pow(2,word_size)-1);
+            x=x&mask;
             if(level%2==1)
                 arr[position[omp_get_thread_num()][x]]=arr1[i];
             else
@@ -402,7 +401,7 @@ public:
         //cout<<lvls;
         //vector<Points<T>> arr1(n);
         this->Sort(0,n-1,lvls);
-        //print();
+        print();
     }
     /*void sorting()
     {
