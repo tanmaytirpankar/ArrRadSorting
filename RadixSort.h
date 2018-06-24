@@ -25,10 +25,10 @@ template <class T>
 class RadixSort{
     vector <T> arr,arr1;
     int num_threads;
-    int n;
+    unsigned int n;
     int word_size;
 public:
-    RadixSort(int n,int num,int word_size)
+    RadixSort(unsigned int n,int num,int word_size)
     {
         this->n=n;
         this->num_threads=num;
@@ -69,14 +69,14 @@ public:
         }*/
     }
 
-    void print()
+    void print()                            //This print displays the number as they are.
     {
         for (int i = 0; i < this->n; i++)
         {
             cout<<arr[i]<<",";
         }
     }
-    void print1() {
+    void print1() {                         //This print is for displaying the number in binary.
         for (int j = 0; j <this->n; ++j) {
             int x=arr[j];
            for (int i = 0; i < 32; i++) {
@@ -247,11 +247,11 @@ public:
     void Sort(int first, int last, int level)
     {
         int num_elements=last-first+1;
-        vector<vector<int>> count(num_threads);
-        vector<vector<int>> position(num_threads);
+        vector<vector<unsigned int>> count(num_threads);
+        vector<vector<unsigned int>> position(num_threads);
         for (int l = 0; l < num_threads; ++l) {
-            count[l] = vector<int>(pow(2,word_size));
-            position[l]=vector<int>(pow(2,word_size));
+            count[l] = vector<unsigned int>(pow(2,word_size));
+            position[l]=vector<unsigned int>(pow(2,word_size));
         }
 //        if(num_elements<=1 || level<1)
 //        {
@@ -401,7 +401,7 @@ public:
         //cout<<lvls;
         //vector<Points<T>> arr1(n);
         this->Sort(0,n-1,lvls);
-        print();
+        //print();
     }
     /*void sorting()
     {

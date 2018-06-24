@@ -7,7 +7,8 @@
 #include <chrono>
 using namespace std;
 int main() {
-    int n,num,buck;
+    unsigned int n;
+    int num,buck;
     cout<<"Enter the number of points:";
     cin>>n;
     cout<<"Number of points "<<n<<endl;
