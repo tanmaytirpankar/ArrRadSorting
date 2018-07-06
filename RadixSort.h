@@ -247,11 +247,12 @@ public:
     void Sort(int first, int last, int level)
     {
         int num_elements=last-first+1;
+        int buckets=int(pow(2,word_size));
         vector<vector<unsigned int>> count(num_threads);
         vector<vector<unsigned int>> position(num_threads);
         for (int l = 0; l < num_threads; ++l) {
-            count[l] = vector<unsigned int>(pow(2,word_size));
-            position[l]=vector<unsigned int>(pow(2,word_size));
+            count[l] = vector<unsigned int>(buckets);
+            position[l]=vector<unsigned int>(buckets);
         }
 //        if(num_elements<=1 || level<1)
 //        {
@@ -267,12 +268,12 @@ public:
         {
             return ;
         }
-        int position1[int(pow(2,word_size))];
+        int position1[buckets];
         //vector<T> temp(num_elements);
         chrono::high_resolution_clock::time_point t1 = chrono::high_resolution_clock::now();
         omp_set_num_threads(num_threads);
-#pragma omp parallel for
-        for (int j = 0; j < int(pow(2,word_size)); j++) {
+#pragma omp parallel
+        for (int j = 0; j < buckets; j++) {
             position1[j]=0;
             count[omp_get_thread_num()][j]=0;
             position[omp_get_thread_num()][j]=0;
@@ -280,7 +281,7 @@ public:
         chrono::high_resolution_clock::time_point t2 = chrono::high_resolution_clock::now();
         auto duration = chrono::duration_cast<chrono::microseconds>( t2 - t1 ).count();
 
-        //cout <<endl <<"The time taken for initialization is "<<duration <<" microseconds"<<endl;
+        //cout <<"The time taken for initialization is "<<duration <<" microseconds"<<endl;
 
         t1 = chrono::high_resolution_clock::now();
         int remainder= (sizeof(arr[0])*8)%word_size;
@@ -309,10 +310,10 @@ public:
         t2 = chrono::high_resolution_clock::now();
         duration = chrono::duration_cast<chrono::microseconds>( t2 - t1 ).count();
 
-        //cout <<endl <<"The time taken for calculating counts is "<<duration <<" microseconds"<<endl;
+        //cout<<"The time taken for calculating counts is "<<duration <<" microseconds"<<endl;
 //        cout<<"Values in count:"<<endl;
 //        for(int i = 0; i < num_threads; i++){
-//            for(int j = 0; j < int(pow(2,word_size)); j++){
+//            for(int j = 0; j < buckets; j++){
 //                cout<<count[i][j]<<" ";
 //            }
 //            cout<<endl;
@@ -331,7 +332,7 @@ public:
 //        }
 
         position1[0]=position[0][0]=first;
-        for (int buc = 0; buc < int(pow(2,word_size)); buc++) {
+        for (int buc = 0; buc < buckets; buc++) {
             for (int tid = 1; tid < num_threads; tid++) {
                 if(tid==0&&buc==0)
                 {}
@@ -340,13 +341,13 @@ public:
                     position[tid][buc]=position[tid-1][buc]+count[tid-1][buc];
                 }
             }
-            if(buc<int(pow(2,word_size))-1)
+            if(buc<buckets-1)
                 position1[buc+1]=position[0][buc+1]=position[num_threads-1][buc]+count[num_threads-1][buc];
         }
 
 //        cout<<"Positions in position at depth "<<level<<" is:"<<endl;
 //        for(int i = 0; i < num_threads; i++){
-//            for(int j = 0; j < int(pow(2,word_size)); j++){
+//            for(int j = 0; j < buckets; j++){
 //                cout<<position[i][j]<<" ";
 //            }
 //            cout<<endl;
@@ -378,16 +379,16 @@ public:
         t2 = chrono::high_resolution_clock::now();
         duration = chrono::duration_cast<chrono::microseconds>( t2 - t1 ).count();
 
-        //cout <<endl <<"The time taken for final sorting is "<<duration <<" microseconds"<<endl;
+        //cout<<"The time taken for final sorting is "<<duration <<" microseconds"<<endl;
 
         //cout<<"Recursion number "<<level<<endl;
         //print();
         omp_set_num_threads(num_threads);
 #pragma omp parallel for
-        for (int i = 0; i < int(pow(2,word_size)); i++)  {
+        for (int i = 0; i < buckets; i++)  {
             int begin=position1[i];
             int ending;
-            if(i!=int(pow(2,word_size))-1)
+            if(i!=buckets-1)
                 ending=position1[i+1]-1;
             else
                 ending=last;
@@ -423,10 +424,10 @@ public:
     {
         if(check())
         {
-            cout<<"Sorted list is in arr.";
+            cout<<endl<<"Sorted list is in arr."<<endl;
         } else if(check1())
         {
-            cout<<"Sorted list is in arr1.";
+            cout<<endl<<"Sorted list is in arr1."<<endl;
             omp_set_num_threads(num_threads);
             #pragma omp parallel for
             for (int i = 0; i < arr1.size(); i++) {
