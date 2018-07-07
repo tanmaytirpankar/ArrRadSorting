@@ -26,7 +26,7 @@ int main() {
     }
     fs.close();*/
 //    omp_set_max_active_levels(3);
-//    omp_set_nested(1);
+    omp_set_nested(1);
     RadixSort<int> *obj=new RadixSort<int>(n,num,buck);
     //obj->printinp();
     //clock_t t1,t2;

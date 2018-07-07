@@ -247,6 +247,16 @@ public:
     void Sort(int first, int last, int level)
     {
         int num_elements=last-first+1;
+        if(num_elements<=4096)
+        {
+            //insertionSort(first,last,level-1);
+            std::sort(&arr[first],&arr[last+1]);
+            return ;
+        }
+        if(level<1)
+        {
+            return ;
+        }
         int buckets=int(pow(2,word_size));
         vector<vector<unsigned int>> count(num_threads);
         vector<vector<unsigned int>> position(num_threads);
@@ -258,16 +268,7 @@ public:
 //        {
 //            return ;
 //        }
-        if(num_elements<=4096)
-        {
-            //insertionSort(first,last,level-1);
-            std::sort(&arr[first],&arr[last+1]);
-            return ;
-        }
-        if(level<1)
-        {
-            return ;
-        }
+
         int position1[buckets];
         //vector<T> temp(num_elements);
         chrono::high_resolution_clock::time_point t1 = chrono::high_resolution_clock::now();
@@ -383,8 +384,9 @@ public:
 
         //cout<<"Recursion number "<<level<<endl;
         //print();
-        omp_set_num_threads(num_threads);
-#pragma omp parallel for
+
+//        omp_set_num_threads(num_threads);
+//#pragma omp parallel for
         for (int i = 0; i < buckets; i++)  {
             int begin=position1[i];
             int ending;
