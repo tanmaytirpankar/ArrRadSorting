@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/tanmay/CLionProjects/ArrRadSorting/main.cpp" "/home/tanmay/CLionProjects/ArrRadSorting/cmake-build-debug/CMakeFiles/ArrRadSorting.dir/main.cpp.o"
+  "/home/tanmaypoke/CLionProjects/ArrRadSorting/main.cpp" "/home/tanmaypoke/CLionProjects/ArrRadSorting/cmake-build-debug/CMakeFiles/ArrRadSorting.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

@@ -26,8 +26,9 @@ int main() {
     }
     fs.close();*/
 //    omp_set_max_active_levels(3);
+//    cout<<omp_get_thread_limit()<<endl;
     omp_set_nested(1);
-    RadixSort<int> *obj=new RadixSort<int>(n,num,buck);
+    RadixSort<unsigned long > *obj=new RadixSort<unsigned long>(n,num,buck);
     //obj->printinp();
     //clock_t t1,t2;
     //t1=clock();

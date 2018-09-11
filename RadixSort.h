@@ -54,7 +54,10 @@ public:
         omp_set_num_threads(num_threads);
 #pragma omp parallel for
         for (int i = 0; i < n; i++) {
-            arr1[i]=arr[i]=rand();
+            arr[i]=rand();
+            arr[i]=arr[i]<<32;
+            arr[i]=arr[i]|rand();
+            arr1[i]=arr[i];
         }
 //        print();
 //        cout<<endl;
@@ -385,8 +388,8 @@ public:
         //cout<<"Recursion number "<<level<<endl;
         //print();
 
-//        omp_set_num_threads(num_threads);
-//#pragma omp parallel for
+        omp_set_num_threads(num_threads);
+#pragma omp parallel for
         for (int i = 0; i < buckets; i++)  {
             int begin=position1[i];
             int ending;
