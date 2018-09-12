@@ -447,12 +447,8 @@ public:
                 //cout << "arr Sorted wrongly";
                 return false;
             }
-            else {
-                //cout << "arr Sorted correcty";
-                return true;
-            }
-
         }
+        return true;
     }
     bool check1()
     {
@@ -461,12 +457,8 @@ public:
                 //cout << "arr1 Sorted wrongly";
                 return false;
             }
-            else {
-                //cout << "arr1 Sorted correcty";
-                return true;
-            }
-
         }
+        return true;
     }
 };
 
