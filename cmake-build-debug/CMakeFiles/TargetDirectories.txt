@@ -1,3 +1,0 @@
-/home/tanmaypoke/CLionProjects/ArrRadSorting/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/tanmaypoke/CLionProjects/ArrRadSorting/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/tanmaypoke/CLionProjects/ArrRadSorting/cmake-build-debug/CMakeFiles/ArrRadSorting.dir

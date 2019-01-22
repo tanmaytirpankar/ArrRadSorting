@@ -5,17 +5,32 @@
 #include <ctime>
 #include <cmath>
 #include <chrono>
+#include <getopt.h>
 using namespace std;
-int main() {
+int main(int argc, char **argv) {
     unsigned int n;
-    int num,buck;
-    cout<<"Enter the number of points:";
-    cin>>n;
-    cout<<"Number of points "<<n<<endl;
-    cout<<"Enter the number of threads:";
-    cin>>num;
-    cout<<"Enter the size of bucketing number";
-    cin>>buck;
+    int num,user_word_size,max_levels;
+    int c;
+    //Loop used to assign parameters based on parameter name. Used for python scripts.
+    while ((c = getopt (argc, argv, "p:t:w:l:")) != -1)
+        switch (c)
+        {
+            case 'p':
+                n = atoi(optarg);
+                break;
+            case 't':
+                num = atoi(optarg);
+                break;
+            case 'w':
+                user_word_size = atoi(optarg);
+                break;
+            case 'l':
+                max_levels = atoi(optarg);
+                break;
+            default:
+                abort ();
+        }
+    cout<<"Number of points "<< n << " Number of threads " <<num<< " Word size " <<user_word_size<< " Levels "<<max_levels<<endl;
     /*ofstream fs;
     string filename = "exampleOutput5.csv";
     fs.open(filename);
@@ -27,8 +42,11 @@ int main() {
     fs.close();*/
 //    omp_set_max_active_levels(3);
 //    cout<<omp_get_thread_limit()<<endl;
+
+    omp_set_max_active_levels(max_levels);
     omp_set_nested(1);
-    RadixSort<unsigned long > *obj=new RadixSort<unsigned long>(n,num,buck);
+
+    RadixSort<unsigned long > *obj=new RadixSort<unsigned long>(n,num,user_word_size);
     //obj->printinp();
     //clock_t t1,t2;
     //t1=clock();
